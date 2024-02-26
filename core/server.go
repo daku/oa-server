@@ -32,7 +32,7 @@ func main() {
 		log.Fatal(fmt.Errorf("failed to decode ./config.json with: %s", err.Error()))
 	}
 
-	connectionString := config.User + ":" + config.Password + "@" + config.DatabaseAddress + "/" + config.Database
+	connectionString := config.User + ":" + config.Password + "@tcp(" + config.DatabaseAddress + ")/" + config.Database
 
 	db, err := db.NewDB(connectionString)
 	if err != nil {
@@ -48,6 +48,8 @@ func main() {
 	if err != nil {
 		log.Fatal(fmt.Errorf("failed to create api instance with: %s", err.Error()))
 	}
+
+	log.Println("Starting server")
 
 	if config.CertFile == "" || config.KeyFile == "" {
 		err = http.ListenAndServe(config.Address+":"+strconv.Itoa(config.Port), app.MakeHandler())
